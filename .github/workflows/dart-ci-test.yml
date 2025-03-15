@@ -3,13 +3,15 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Dart
+name: Dart Unit Test
 
 on:
   push:
-    branches: [ "*" ]
+    branches:
+      - "**"
   pull_request:
-    branches: [ "*" ]
+    branches:
+        - "**"
 
 jobs:
   build:
