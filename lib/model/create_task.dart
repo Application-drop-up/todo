@@ -32,5 +32,5 @@ class CreateTask
     if (dueDate!.isBefore(DateTime.now())) {
       throw ArgumentError('due date must be in the future');
     }
-  };
+  }
 }
