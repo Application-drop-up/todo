@@ -1,0 +1,55 @@
+name: Label PR by Commit Message
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  label_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get Commit Message
+        id: get_commit_message
+        run: |
+          MESSAGE=$(git log --format=%s -n 1 HEAD)
+          echo "Commit Message: $MESSAGE"
+          echo "commit_message=$MESSAGE" >> $GITHUB_ENV
+
+      - name: Determine Label from Commit Message
+        id: determine_label
+        run: |
+          COMMIT_MSG="${{ env.commit_message }}"
+          LABEL=""
+          
+          # 例: "[feature] ..." の場合 "feature" ラベルを付与
+          if [[ "$COMMIT_MSG" =~ ^(\[feature\]|feat:) ]]; then
+            LABEL="enhancement"
+          elif [[ "$COMMIT_MSG" =~ ^(\[bugfix\]|fix:) ]]; then
+            LABEL="bugfix"
+          elif [[ "$COMMIT_MSG" =~ ^(\[docs\]|docs:) ]]; then
+            LABEL="documentation"
+          elif [[ "$COMMIT_MSG" =~ ^(\[refactor\]|refactor:) ]]; then
+            LABEL="refactor"
+          elif [[ "$COMMIT_MSG" =~ ^(\[test\]|test:) ]]; then
+            LABEL="test"
+          elif [[ "$COMMIT_MSG" =~ ^(\[chore\]|chore:) ]]; then
+            LABEL="chore"
+          fi
+
+          echo "Determined Label: $LABEL"
+          echo "label_name=$LABEL" >> $GITHUB_ENV
+
+      - name: Apply Label to PR
+        if: env.label_name != ''
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: ${{ env.label_name }}
