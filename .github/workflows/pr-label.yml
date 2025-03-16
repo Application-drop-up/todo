@@ -32,8 +32,12 @@ jobs:
         run: |
           COMMIT_MSG="${{ env.commit_message }}"
           LABEL=""
+
+          if [[ "$COMMIT_MSG" =~ ^Merge\ [a-f0-9]{40}\ into\ [a-f0-9]{40}$ ]]; then
+            LABEL="merge"
           
-          if [[ "$COMMIT_MSG" =~ ^(\[feature\]|feat:\s*) ]]; then
+          # 🔹 通常のコミットメッセージに対するラベル適用
+          elif [[ "$COMMIT_MSG" =~ ^(\[feature\]|feat:\s*) ]]; then
             LABEL="enhancement"
           elif [[ "$COMMIT_MSG" =~ ^(\[bugfix\]|fix:\s*) ]]; then
             LABEL="bugfix"
