@@ -40,17 +40,17 @@ jobs:
             LABEL="merge"
           
           # 🔹 通常のコミットメッセージに対するラベル適用
-          elif [[ "$COMMIT_MSG" =~ ^(\[feature\]|feat:\s*) ]]; then
+          elif [[ "$COMMIT_MSG" =~ ^(\[feature\]|feat:.*) ]]; then
             LABEL="enhancement"
-          elif [[ "$COMMIT_MSG" =~ ^(\[bugfix\]|fix:\s*) ]]; then
+          elif [[ "$COMMIT_MSG" =~ ^(\[bugfix\]|fix:.*) ]]; then
             LABEL="bugfix"
-          elif [[ "$COMMIT_MSG" =~ ^(\[docs\]|docs:\s*) ]]; then
+          elif [[ "$COMMIT_MSG" =~ ^(\[docs\]|docs:.*) ]]; then
             LABEL="documentation"
-          elif [[ "$COMMIT_MSG" =~ ^(\[refactor\]|refactor:\s*) ]]; then
+          elif [[ "$COMMIT_MSG" =~ ^(\[refactor\]|refactor:.*) ]]; then
             LABEL="refactor"
-          elif [[ "$COMMIT_MSG" =~ ^(\[test\]|test:\s*) ]]; then
+          elif [[ "$COMMIT_MSG" =~ ^(\[test\]|test:.*) ]]; then
             LABEL="test"
-          elif [[ "$COMMIT_MSG" =~ ^(\[chore\]|chore:\s*) ]]; then
+          elif [[ "$COMMIT_MSG" =~ ^(\[chore\]|chore:.*) ]]; then
             LABEL="chore"
           fi
 
