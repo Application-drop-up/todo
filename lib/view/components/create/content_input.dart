@@ -5,10 +5,10 @@ class ContentInput extends StatelessWidget {
   final Function(String)? onChanged;
 
   const ContentInput({
-    Key? key,
+    super.key,
     required this.controller,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

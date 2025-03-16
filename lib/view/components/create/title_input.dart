@@ -7,12 +7,12 @@ class TitleInput extends StatelessWidget {
   final Function(String) onChanged;
 
   const TitleInput({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     required this.title,
     required this.onChanged,
-  }) : super(key: key);
+  }) ;
 
   @override
   Widget build(BuildContext context) {
