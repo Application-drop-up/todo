@@ -7,6 +7,8 @@ import 'package:todo/viewmodel/create_task_viewmodel.dart';
 import 'package:todo/model/create_task.dart';
 
 class CreateTaskPage extends StatelessWidget {
+  const CreateTaskPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
