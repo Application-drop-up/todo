@@ -64,6 +64,12 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildActionButton("Create", Colors.purple, _navigateToCreateTaskScreen),
+                _buildActionButton("Detail", Colors.blue, () {}),
+                _buildActionButton("Delete All", Colors.redAccent, () {
+                  setState(() {
+                    todoList.clear();
+                  });
+                }),
               ],
             ),
           ),
