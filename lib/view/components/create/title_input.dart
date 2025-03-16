@@ -4,14 +4,14 @@ class TitleInput extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final String title;
-  final Function(String)? onChanged;
+  final Function(String) onChanged;
 
   const TitleInput({
     Key? key,
     required this.controller,
     required this.hintText,
     required this.title,
-    this.onChanged,
+    required this.onChanged,
   }) : super(key: key);
 
   @override

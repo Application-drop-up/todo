@@ -24,7 +24,6 @@ class CreateTaskPage extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // タイトル入力
                   TitleInput(
                     controller: TextEditingController(text: viewModel.title),
                     hintText: 'Write down the title',
@@ -43,7 +42,6 @@ class CreateTaskPage extends StatelessWidget {
                     ),
                   const SizedBox(height: 12),
 
-                  // 内容入力
                   ContentInput(
                     controller: TextEditingController(text: viewModel.description),
                     onChanged: (value) {
@@ -60,7 +58,6 @@ class CreateTaskPage extends StatelessWidget {
                     ),
                   const SizedBox(height: 12),
 
-                  // 期限入力
                   DeadlinePicker(
                     selectedDate: viewModel.dueDate,
                     onDateSelected: (date) {
@@ -77,9 +74,9 @@ class CreateTaskPage extends StatelessWidget {
                     ),
                   const SizedBox(height: 20),
 
-                  // タスク作成ボタン
                   Center(
                     child: ElevatedButton(
+                      key: const Key('create_task_button'),
                       onPressed: () {
                         viewModel.attemptSubmit();
 
@@ -88,7 +85,7 @@ class CreateTaskPage extends StatelessWidget {
                           Navigator.pop(context, newTask);
                         }
                       },
-                      child: const Text("Create Task"),
+                      child: const Text("Create"),
                     ),
                   ),
                 ],
