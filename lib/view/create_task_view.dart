@@ -1,86 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/view/components/create/title_input.dart';
+import 'package:todo/view/components/create/content_input.dart';
+import 'package:todo/view/components/create/deadline_input.dart';
+import 'package:todo/viewmodel/create_task_viewmodel.dart';
+import 'package:todo/model/create_task.dart';
 
-class CreateTaskView extends StatefulWidget {
-  @override
-  _CreateTaskViewState createState() => _CreateTaskViewState();
-}
-
-class _CreateTaskViewState extends State<CreateTaskView> {
-  final TextEditingController _taskController = TextEditingController();
-
-  void _submitTask() {
-    if (_taskController.text.isNotEmpty) {
-      Navigator.pop(context, _taskController.text);
-    }
-  }
-
+class CreateTaskPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.deepPurple[10],
-      appBar: AppBar(
-        title: const Text('Create Task', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'タスクを入力してください',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _taskController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-                hintText: 'タスク名を入力...',
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildActionButton("キャンセル", Colors.grey, () => Navigator.pop(context)),
-                _buildActionButton("作成", Colors.purple, _submitTask),
-              ],
-            ),
-          ],
+    return ChangeNotifierProvider(
+      create: (context) => CreateTaskViewModel(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Create Task', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          backgroundColor: Colors.deepPurple,
+          foregroundColor: Colors.white,
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.deepPurple,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Center(
-            child: Text(
-              '© 2025 Todo App',
-              style: TextStyle(color: Colors.white, fontSize: 14),
-            ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Consumer<CreateTaskViewModel>(
+            builder: (context, viewModel, child) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // タイトル入力
+                  TitleInput(
+                    controller: TextEditingController(text: viewModel.title),
+                    hintText: 'Write down the title',
+                    title: 'Title',
+                    onChanged: (value) {
+                      viewModel.updateTitle(value);
+                    },
+                  ),
+                  if (viewModel.hasAttemptedSubmission && viewModel.validateTitle(viewModel.title) != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        viewModel.validateTitle(viewModel.title)!,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                  const SizedBox(height: 12),
+
+                  // 内容入力
+                  ContentInput(
+                    controller: TextEditingController(text: viewModel.description),
+                    onChanged: (value) {
+                      viewModel.updateDescription(value);
+                    },
+                  ),
+                  if (viewModel.hasAttemptedSubmission && viewModel.validateDescription(viewModel.description) != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        viewModel.validateDescription(viewModel.description)!,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                  const SizedBox(height: 12),
+
+                  // 期限入力
+                  DeadlinePicker(
+                    selectedDate: viewModel.dueDate,
+                    onDateSelected: (date) {
+                      viewModel.updateDueDate(date);
+                    },
+                  ),
+                  if (viewModel.hasAttemptedSubmission && viewModel.validateDueDate(viewModel.dueDate) != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        viewModel.validateDueDate(viewModel.dueDate)!,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                  const SizedBox(height: 20),
+
+                  // タスク作成ボタン
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        viewModel.attemptSubmit();
+
+                        if (viewModel.canSubmit()) {
+                          CreateTask newTask = viewModel.createTask();
+                          Navigator.pop(context, newTask);
+                        }
+                      },
+                      child: const Text("Create Task"),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildActionButton(String text, Color color, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      child: Text(text),
     );
   }
 }
