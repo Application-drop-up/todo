@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/view/create_task_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,26 +34,17 @@ class _MyHomePageState extends State<MyHomePage> {
     "Task 7", "Task 6", "Task 5", "Task 4", "Task 3", "Task 2", "Task 1"
   ];
 
-  void _addTodo() {
-    setState(() {
-      todoList.insert(0, "Task ${todoList.length + 1}");
+  void _navigateToCreateTaskScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CreateTaskPage()),
+    ).then((newTask) {
+      if (newTask != null) {
+        setState(() {
+          todoList.insert(0, newTask);
+        });
+      }
     });
-  }
-
-  void _updateTodo() {
-    if (todoList.isNotEmpty) {
-      setState(() {
-        todoList[0] = "Updated Task ${todoList.length}";
-      });
-    }
-  }
-
-  void _deleteTodo() {
-    if (todoList.isNotEmpty) {
-      setState(() {
-        todoList.removeAt(0);
-      });
-    }
   }
 
   @override
@@ -71,26 +63,29 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildActionButton("作成", Colors.purple, _addTodo),
-                _buildActionButton("更新", Colors.blue, _updateTodo),
-                _buildActionButton("削除", Colors.orange, _deleteTodo),
+                _buildActionButton("Create", Colors.purple, _navigateToCreateTaskScreen),
+                _buildActionButton("Detail", Colors.blue, () {}),
+                _buildActionButton("Delete All", Colors.redAccent, () {
+                  setState(() {
+                    todoList.clear();
+                  });
+                }),
               ],
             ),
           ),
-          Flexible(
-            child: SingleChildScrollView(
-              child: Column(
-                children: todoList.map((task) {
-                  return Card(
-                    color: Colors.white,
-                    elevation: 3,
-                    margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    child: ListTile(
-                      title: Text(task, style: const TextStyle(fontSize: 18)),
-                    ),
-                  );
-                }).toList(),
-              ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: todoList.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  color: Colors.white,
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  child: ListTile(
+                    title: Text(todoList[index], style: const TextStyle(fontSize: 18)),
+                  ),
+                );
+              },
             ),
           ),
         ],

@@ -1,0 +1,65 @@
+name: Label PR by Commit Message
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get Commit Message
+        id: get_commit_message
+        run: |
+          MESSAGE=$(git log --format=%s -n 1 HEAD | xargs)
+          echo "Commit Message: '$MESSAGE'"
+          echo "commit_message=$MESSAGE" >> $GITHUB_ENV
+
+      - name: Debug Commit Message
+        run: |
+          echo "DEBUG: Commit message is '${{ env.commit_message }}'"
+
+      - name: Determine Label from Commit Message
+        id: determine_label
+        run: |
+          COMMIT_MSG="${{ env.commit_message }}"
+          LABEL=""
+
+          if [[ "$COMMIT_MSG" =~ ^Merge\ [a-f0-9]{40}\ into\ [a-f0-9]{40}$ ]]; then
+            LABEL="merge"
+          
+          # 🔹 通常のコミットメッセージに対するラベル適用
+          elif [[ "$COMMIT_MSG" =~ ^(\[feature\]|feat:.*) ]]; then
+            LABEL="enhancement"
+          elif [[ "$COMMIT_MSG" =~ ^(\[bugfix\]|fix:.*) ]]; then
+            LABEL="bugfix"
+          elif [[ "$COMMIT_MSG" =~ ^(\[docs\]|docs:.*) ]]; then
+            LABEL="documentation"
+          elif [[ "$COMMIT_MSG" =~ ^(\[refactor\]|refactor:.*) ]]; then
+            LABEL="refactor"
+          elif [[ "$COMMIT_MSG" =~ ^(\[test\]|test:.*) ]]; then
+            LABEL="test"
+          elif [[ "$COMMIT_MSG" =~ ^(\[chore\]|chore:.*) ]]; then
+            LABEL="chore"
+          fi
+
+          echo "Determined Label: $LABEL"
+          echo "label_name=$LABEL" >> $GITHUB_ENV
+
+      - name: Apply Label to PR
+        if: env.label_name != ''
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: ${{ env.label_name }}
