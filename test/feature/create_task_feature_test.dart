@@ -6,7 +6,7 @@ import 'package:todo/viewmodel/create_task_viewmodel.dart';
 
 void main() {
   testWidgets('タスク作成フォームが正しく動作する', (WidgetTester tester) async {
-    // **ウィジェットを描画**
+
     await tester.pumpWidget(
       MaterialApp(
         home: ChangeNotifierProvider(
@@ -39,8 +39,8 @@ void main() {
     viewModel.updateDueDate(pickedDate);
     await tester.pumpAndSettle();
 
-    print('期限のバリデーション: ${viewModel.validateDueDate()}');
-    expect(viewModel.validateDueDate(), isNull);
+    expect(viewModel.validateDueDate(viewModel.dueDate), isNull);
+
 
     expect(viewModel.canSubmit(), isTrue);
 
