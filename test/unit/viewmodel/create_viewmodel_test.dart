@@ -10,7 +10,7 @@ void main() {
     });
 
     test('タイトルが空のときはエラーメッセージを返す', () {
-      expect(viewModel.validateTitle(""), "title is required");
+      expect(viewModel.validateTitle(), "title is required");
     });
 
     test('タイトルが3文字未満のときはエラーメッセージを返す', () {
@@ -35,12 +35,17 @@ void main() {
 
     test('期限日が過去の場合はエラーメッセージを返す', () {
       DateTime pastDate = DateTime.now().subtract(Duration(days: 1));
-      expect(viewModel.validateDueDate(pastDate), "deadline can not registered in the past");
+      expect(viewModel.validateDueDate(pastDate), "deadline cannot be in the past");
     });
 
     test('期限日が未来の場合はエラーなし', () {
       DateTime futureDate = DateTime.now().add(Duration(days: 1));
-      expect(viewModel.validateDueDate(futureDate), null);
+      viewModel.updateDueDate(futureDate); // **セットしておく**
+      expect(viewModel.validateDueDate(), null); // **引数なしでもOK**
+    });
+
+    test('期限日がnullの場合はエラーメッセージを返す', () {
+      expect(viewModel.validateDueDate(), "deadline is required");
     });
   });
 }
