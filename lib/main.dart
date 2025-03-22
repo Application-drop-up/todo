@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/view/create_task_view.dart';
 import 'package:todo/model/show_detail_task.dart';
-import 'package:todo/model/show_detail_task.dart';
 
 void main() {
   runApp(const MyApp());
