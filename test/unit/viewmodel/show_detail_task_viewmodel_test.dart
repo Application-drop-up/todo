@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:todo/viewmodel/show_detail_task_viewmodel.dart';
-import 'package:todo/model/show_detail_task.dart';
 
 void main() {
   group('ShowDetailTaskViewModel Test', () {
