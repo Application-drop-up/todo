@@ -28,7 +28,7 @@ class CreateTaskPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TitleInput(
-                      controller: viewModel.titleController,  // ✅ 変更
+                      controller: viewModel.titleController,
                       hintText: 'Write down the title',
                       title: 'Title',
                       onChanged: viewModel.updateTitle,
@@ -44,7 +44,7 @@ class CreateTaskPage extends StatelessWidget {
                     const SizedBox(height: 12),
 
                     ContentInput(
-                      controller: viewModel.descriptionController,  // ✅ 変更
+                      controller: viewModel.descriptionController,
                       onChanged: viewModel.updateDescription,
                     ),
                     if (viewModel.hasAttemptedSubmission && viewModel.validateDescription() != null)
