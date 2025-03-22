@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/view/create_task_view.dart';
+import 'package:todo/model/show_detail_task.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,9 +30,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> todoList = [
-    "Task 13", "Task 12", "Task 11", "Task 10", "Task 9", "Task 8",
-    "Task 7", "Task 6", "Task 5", "Task 4", "Task 3", "Task 2", "Task 1"
+  List<Task> todoList = [
+    Task(id: "1", title: "Task 1", content: "This is task 1", dueDate: DateTime(2025, 5, 10), isCompleted: false),
+    Task(id: "2", title: "Task 2", content: "This is task 2", dueDate:  DateTime(2025, 6, 15), isCompleted: false),
+    Task(id: "3", title: "Task 3", content: "This is task 3", dueDate: DateTime(2025, 7, 20), isCompleted: false),
   ];
 
   void _navigateToCreateTaskScreen() {
@@ -39,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
       context,
       MaterialPageRoute(builder: (context) => CreateTaskPage()),
     ).then((newTask) {
-      if (newTask != null) {
+      if (newTask != null && newTask is Task) {
         setState(() {
           todoList.insert(0, newTask);
         });
@@ -64,7 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildActionButton("Create", Colors.purple, _navigateToCreateTaskScreen),
-                _buildActionButton("Detail", Colors.blue, () {}),
                 _buildActionButton("Delete All", Colors.redAccent, () {
                   setState(() {
                     todoList.clear();
@@ -77,30 +78,26 @@ class _MyHomePageState extends State<MyHomePage> {
             child: ListView.builder(
               itemCount: todoList.length,
               itemBuilder: (context, index) {
+                final task = todoList[index];
+
                 return Card(
                   color: Colors.white,
                   elevation: 3,
                   margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: ListTile(
-                    title: Text(todoList[index], style: const TextStyle(fontSize: 18)),
+                    title: Text(task.title, style: const TextStyle(fontSize: 18)),
+                    subtitle: Text("Deadline: ${task.dueDate.toString()}"),
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Task: ${task.title}\nDeadline: ${task.dueDate}")),
+                      );
+                    },
                   ),
                 );
               },
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.deepPurple,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Center(
-            child: Text(
-              '© 2025 Todo App',
-              style: TextStyle(color: Colors.white, fontSize: 14),
-            ),
-          ),
-        ),
       ),
     );
   }
