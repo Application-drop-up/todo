@@ -1,12 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:todo/model/show_detail_task.dart';
 import 'package:todo/viewmodel/show_detail_task_viewmodel.dart';
 
 void main() {
   group('ShowDetailTaskViewModel Test', () {
     late ShowDetailTaskViewModel viewModel;
+    final Task task;
 
     setUp(() {
-      viewModel = ShowDetailTaskViewModel();
+      viewModel = ShowDetailTaskViewModel(
+        task: Task(
+          id: "1",
+          title: "Task 1",
+          content: "Description 1",
+          dueDate: DateTime(2025, 5, 10),
+          isCompleted: false,
+        ),
+      );
     });
 
     test('should return a task when a valid ID is provided', () {

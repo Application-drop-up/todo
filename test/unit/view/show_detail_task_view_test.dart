@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/view/show_detail_task_view.dart';
 import 'package:todo/viewmodel/show_detail_task_viewmodel.dart';
 import 'package:todo/model/show_detail_task.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   group('ShowTaskPage Widget Test', () {
@@ -29,16 +30,12 @@ void main() {
         ),
       );
 
-      // タイトルが表示されているか
       expect(find.text("Sample Task"), findsOneWidget);
-
-      // コンテンツが表示されているか
       expect(find.text("This is a sample task for testing."), findsOneWidget);
-
-      // 期日が正しく表示されているか
-      expect(find.text("Due Date: ${sampleTask.dueDate.toString()}"), findsOneWidget);
-
-      // `isCompleted` の表示が正しいか
+      expect(
+        find.text("Due Date: ${DateFormat('yyyy-MM-dd').format(sampleTask.dueDate!)}"),
+        findsOneWidget,
+      );
       expect(find.text("Status: not yet"), findsOneWidget);
     });
 
@@ -47,8 +44,8 @@ void main() {
         id: "2",
         title: "Completed Task",
         content: "This task is completed.",
-        dueDate: DateTime(2025, 6, 15),
-        isCompleted: true, // ✅ 完了済みのタスク
+        dueDate: DateTime(2025, 5, 10),
+        isCompleted: true,
       );
 
       await tester.pumpWidget(
@@ -60,7 +57,6 @@ void main() {
         ),
       );
 
-      // `isCompleted` が true の場合、"done" が表示されているか
       expect(find.text("Status: done"), findsOneWidget);
     });
   });
