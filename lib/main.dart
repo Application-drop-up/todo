@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/view/create_task_view.dart';
+import 'package:todo/view/show_detail_task_view.dart';
 import 'package:todo/model/show_detail_task.dart';
 
 void main() {
@@ -86,10 +87,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: ListTile(
                     title: Text(task.title, style: const TextStyle(fontSize: 18)),
-                    subtitle: Text("Deadline: ${task.dueDate.toString()}"),
+                    subtitle: Text("Deadline: ${task.dueDate.toString().split(' ')[0]}"),
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Task: ${task.title}\nDeadline: ${task.dueDate}")),
+                      // ✅ 詳細画面へ遷移
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ShowTaskPage(task: task),
+                        ),
                       );
                     },
                   ),
@@ -98,6 +103,18 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.deepPurple,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Center(
+            child: Text(
+              '© 2025 Todo App',
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ),
+        ),
       ),
     );
   }
