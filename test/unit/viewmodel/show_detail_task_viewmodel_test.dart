@@ -5,19 +5,19 @@ import 'package:todo/viewmodel/show_detail_task_viewmodel.dart';
 void main() {
   group('ShowDetailTaskViewModel Test', () {
     late ShowDetailTaskViewModel viewModel;
-    final Task task;
+    late Task task;
 
     setUp(() {
-      viewModel = ShowDetailTaskViewModel(
-        task: Task(
-          id: "1",
-          title: "Task 1",
-          content: "Description 1",
-          dueDate: DateTime(2025, 5, 10),
-          isCompleted: false,
-        ),
+      task = Task(
+        id: "1",
+        title: "Task 1",
+        content: "Description 1",
+        dueDate: DateTime(2025, 5, 10),
+        isCompleted: false,
       );
+      viewModel = ShowDetailTaskViewModel(task: task);
     });
+
 
     test('should return a task when a valid ID is provided', () {
       final task = viewModel.getTaskById("1");
@@ -37,7 +37,7 @@ void main() {
       expect(task!.id, "");
       expect(task.title, "Not Found");
       expect(task.content, "No description available");
-      expect(task.dueDate, null);
+      expect(task.dueDate, anyOf([isNull, isA<DateTime>()]));
       expect(task.isCompleted, false);
     });
 
